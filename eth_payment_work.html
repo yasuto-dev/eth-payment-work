@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<html>
+<head>
+ 
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+ <div class="mx-auto" style="width: 300px;">
+<div class="container pb-8">
+   <div class="card" style="width: 18rem;">
+     <img class="card-img-top" src="https://source.unsplash.com/user/erondu/288x180" alt="Card image cap">
+     <div class="card-body">
+       <h5 class="card-title">商品タイトル</h5>
+       <h5 class="card-title">0.01ETH</h5>
+       <p class="card-text">ここに商品の説明を入れてください</p>
+ <div>
+ 
+   <div class="mx-auto" style="width: 200px;">
+    <button class= "btn btn-primary">イーサリアムで支払う</button>
+   <div id="status"></div>
+ </div>
+ </div>
+     </div>
+   </div>
+ </div>
+</div>
+ <script type="text/javascript">
+   window.addEventListener('load', async () => {
+     if (window.ethereum) {
+       window.web3 = new Web3(ethereum);
+       try {
+         await ethereum.enable();
+         initPayButton()
+       } catch (err) {
+         $('#status').html('アカウントアクセスを拒否しました', err)
+       }
+     } else if (window.web3) {
+       window.web3 = new Web3(web3.currentProvider)
+       initPayButton()
+     } else {
+       $('#status').html('metamaskがインストールされていません');
+        alert("metamaskをインストールしてください");
+     }
+   })
+   const initPayButton = () => {
+     $('.btn-primary').click(() => {
+       // 送金アドレス
+       const paymentAddress = '0xC0Aaac6A26aC0A470d52Dd268f9d051A733C7ec3'
+       const amountEth = 0.01
+       web3.eth.sendTransaction({
+         to: paymentAddress,
+         value: web3.toWei(amountEth, 'ether')
+       }, (err, transactionId) => {
+         if  (err) {
+           console.log('Payment failed', err)
+           $('#status').html('支払いに失敗しました')
+         } else {
+           console.log('Payment successful', transactionId)
+           $('#status').html('支払いに成功しました')
+         }
+       })
+     })
+   }
+ </script>
